@@ -126,3 +126,31 @@ Vercel 별도 프로젝트로 배포. `vercel.json`에서 SPA rewrites와 함수
 - **Phase 2 게시판** — 작성·수정·삭제·댓글·반응 SS 4장
 - **Phase 3 마켓** — 상품 목록·상세·카트·주문 SS 4장
 - **공통** — 로그인 후 카트 아이콘 노출, 비로그인 시 회원 가드 동작
+
+## 스크린샷
+
+### Phase 1 — 인증 (B1)
+
+| 게스트 홈 | 회원가입 검증 | 로그인 후 |
+|---|---|---|
+| ![](screenshots/B1/01-guest-home.png) | ![](screenshots/B1/02-register-validation.png) | ![](screenshots/B1/03-logged-in.png) |
+
+### Q5 — 게시판
+
+| 글 목록 | 글 작성 |
+|---|---|
+| ![](screenshots/Q5/s1%20%EA%B8%80%EB%AA%A9%EB%A1%9D.png) | ![](screenshots/Q5/s2%20%EA%B8%80%EC%9E%91%EC%84%B1.png) |
+
+| 글 상세 + 댓글 + 반응 | 글 수정/삭제 |
+|---|---|
+| ![](screenshots/Q5/s3%20%EA%B8%80%EC%83%81%EC%84%B8%EB%8C%93%EA%B8%80%EB%B0%98%EC%9D%91%20.png) | ![](screenshots/Q5/s4%20%EA%B8%80%EC%88%98%EC%A0%95%20%EC%82%AD%EC%A0%9C%20.png) |
+
+### Q6 — 쇼핑
+
+| 상품 목록 | 상품 상세 |
+|---|---|
+| ![](screenshots/Q6/s1%20%EC%83%81%ED%92%88%EB%AA%A9%EB%A1%9D.png) | ![](screenshots/Q6/s2%20%EC%83%81%ED%92%88%EC%83%81%EC%84%B8.png) |
+
+| 카트 화면 | 주문 상세 |
+|---|---|
+| ![](screenshots/Q6/s3%20%EC%B9%B4%ED%8A%B8%ED%99%94%EB%A9%B4.png) | ![](screenshots/Q6/s4%20%EC%A3%BC%EB%AC%B8%EC%83%81%EC%84%B8.png) |
