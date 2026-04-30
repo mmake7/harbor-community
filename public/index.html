@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Harbor Community</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+  />
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #0a0a0a;
+      --secondary: #6b6b6b;
+      --divider: #e5e5e5;
+      --card: #fafafa;
+      --accent: #2563eb;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font-family: inherit; cursor: pointer; }
+    input  { font-family: inherit; }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── Header ── */
+    .header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--divider);
+    }
+    .header-inner {
+      max-width: 1080px; margin: 0 auto;
+      padding: 14px 24px;
+      display: grid;
+      grid-template-columns: 220px 1fr 240px;
+      align-items: center; gap: 24px;
+    }
+    .logo {
+      font-size: 17px; font-weight: 700; letter-spacing: -0.02em;
+      cursor: pointer;
+    }
+    .tabs { display: flex; gap: 8px; justify-content: center; }
+    .tab {
+      padding: 8px 16px;
+      background: transparent; border: 0;
+      font-size: 14px; color: var(--secondary);
+      border-radius: 6px;
+    }
+    .tab:hover { background: var(--card); color: var(--text); }
+    .header-right { display: flex; gap: 8px; justify-content: flex-end; align-items: center; }
+
+    .btn {
+      height: 36px; padding: 0 14px;
+      border: 1px solid var(--divider); border-radius: 6px;
+      background: #fff; color: var(--text);
+      font-size: 13px; font-weight: 500;
+    }
+    .btn:hover { background: var(--card); }
+    .btn-primary {
+      background: var(--text); color: #fff; border-color: var(--text);
+    }
+    .btn-primary:hover { background: #2a2a2a; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-block { width: 100%; height: 44px; font-size: 14px; }
+
+    .user-menu { position: relative; }
+    .user-trigger {
+      display: flex; align-items: center; gap: 6px;
+      height: 36px; padding: 0 14px;
+      background: var(--card); border: 1px solid var(--divider); border-radius: 6px;
+      font-size: 14px; font-weight: 500;
+    }
+    .user-trigger:hover { background: #f0f0f0; }
+    .dropdown {
+      position: absolute; top: 44px; right: 0;
+      min-width: 140px;
+      background: #fff; border: 1px solid var(--divider); border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .dropdown button {
+      display: block; width: 100%;
+      padding: 10px 14px;
+      background: transparent; border: 0; text-align: left;
+      font-size: 14px; color: var(--text);
+    }
+    .dropdown button:hover { background: var(--card); }
+
+    /* ── Main ── */
+    .main {
+      max-width: 1080px; margin: 0 auto;
+      padding: 64px 24px 96px;
+    }
+    .home-guest {
+      text-align: center; padding: 64px 0;
+    }
+    .home-title {
+      font-size: 36px; font-weight: 700; letter-spacing: -0.03em;
+      line-height: 1.2; margin-bottom: 16px;
+    }
+    .home-sub {
+      font-size: 16px; color: var(--secondary); margin-bottom: 32px;
+    }
+    .home-cta {
+      height: 48px; padding: 0 28px;
+      background: var(--text); color: #fff; border: 0; border-radius: 8px;
+      font-size: 15px; font-weight: 600;
+    }
+    .home-cta:hover { background: #2a2a2a; }
+
+    .home-user-greeting {
+      font-size: 24px; font-weight: 600; letter-spacing: -0.02em;
+      margin-bottom: 32px;
+    }
+    .home-cards {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+    }
+    .home-card {
+      padding: 32px;
+      background: var(--card);
+      border: 1px solid var(--divider); border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .home-card:hover {
+      background: #fff;
+      border-color: var(--text);
+      transform: translateY(-2px);
+    }
+    .home-card-icon { font-size: 36px; margin-bottom: 12px; }
+    .home-card-title { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+    .home-card-desc { font-size: 13px; color: var(--secondary); }
+
+    /* ── Modal ── */
+    .modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(10,10,10,0.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+    .modal {
+      width: 100%; max-width: 420px;
+      background: #fff; border-radius: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .modal-head {
+      padding: 24px 28px 0;
+    }
+    .modal-title {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+    }
+    .modal-sub {
+      font-size: 13px; color: var(--secondary); margin-top: 6px;
+    }
+    .modal-body { padding: 22px 28px 28px; }
+
+    .error-banner {
+      margin-bottom: 14px; padding: 10px 12px;
+      background: #fef2f2; border: 1px solid #fecaca;
+      color: var(--danger); border-radius: 6px;
+      font-size: 13px;
+    }
+
+    .field { margin-bottom: 14px; }
+    .field-label {
+      font-size: 12px; font-weight: 500; color: var(--secondary);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .field-input {
+      width: 100%; height: 42px;
+      padding: 0 14px;
+      background: #fff;
+      border: 1px solid var(--divider); border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.15s;
+    }
+    .field-input:focus { outline: none; border-color: var(--text); }
+    .field-input.error { border-color: var(--danger); }
+    .field-error {
+      margin-top: 6px;
+      font-size: 12px; color: var(--danger);
+    }
+    .field-hint {
+      margin-top: 6px;
+      font-size: 12px; color: var(--secondary);
+    }
+
+    .modal-footer {
+      margin-top: 18px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .modal-switch {
+      text-align: center; font-size: 13px; color: var(--secondary); margin-top: 14px;
+    }
+    .link-btn {
+      background: none; border: 0; color: var(--accent);
+      font-weight: 500; cursor: pointer; padding: 0;
+    }
+    .link-btn:hover { text-decoration: underline; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; right: 24px; bottom: 24px;
+      max-width: 360px;
+      padding: 12px 16px;
+      background: #fff; border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      z-index: 200;
+      animation: toast-in 0.2s ease;
+    }
+    .toast.success { border-left: 3px solid var(--success); }
+    .toast.error   { border-left: 3px solid var(--danger); }
+    .toast.info    { border-left: 3px solid var(--accent); }
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Misc ── */
+    .skeleton-pulse {
+      width: 80px; height: 36px;
+      background: var(--card); border-radius: 6px;
+    }
+
+    /* ── Board ── */
+    .board-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .board-head h2 {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+    }
+
+    .post-list { border-top: 1px solid var(--divider); }
+    .post-item {
+      padding: 18px 4px;
+      border-bottom: 1px solid var(--divider);
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .post-item:hover { background: var(--card); }
+    .post-item-title {
+      font-size: 16px; font-weight: 600;
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .post-item-meta {
+      margin-top: 6px;
+      font-size: 12px; color: var(--secondary);
+    }
+    .badge-mine {
+      display: inline-block;
+      padding: 2px 8px;
+      background: var(--text); color: #fff;
+      border-radius: 10px;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0;
+    }
+    .comment-count {
+      display: inline-block;
+      margin-left: 6px;
+      color: var(--secondary); font-weight: 400; font-size: 14px;
+    }
+
+    .empty-state {
+      padding: 64px 0; text-align: center;
+      color: var(--secondary); font-size: 14px;
+    }
+    .load-more {
+      display: block; margin: 24px auto 0;
+      padding: 10px 24px;
+      background: #fff; color: var(--text);
+      border: 1px solid var(--divider); border-radius: 6px;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+    }
+    .load-more:hover { background: var(--card); }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-bottom: 18px;
+      background: none; border: 0;
+      color: var(--secondary); font-size: 13px;
+      cursor: pointer;
+    }
+    .back-link:hover { color: var(--text); }
+
+    .post-detail h2 {
+      font-size: 26px; font-weight: 700; letter-spacing: -0.02em;
+      line-height: 1.3; margin-bottom: 8px;
+    }
+    .post-detail-meta {
+      font-size: 13px; color: var(--secondary);
+      padding-bottom: 18px; border-bottom: 1px solid var(--divider);
+    }
+    .post-body {
+      padding: 22px 0;
+      font-size: 15px; line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .reactions {
+      display: flex; gap: 8px;
+      padding: 14px 0;
+      border-top: 1px solid var(--divider);
+      border-bottom: 1px solid var(--divider);
+    }
+    .react-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px;
+      background: #fff; border: 1px solid var(--divider); border-radius: 20px;
+      font-size: 14px; cursor: pointer;
+    }
+    .react-btn:hover { background: var(--card); }
+    .react-btn.active {
+      background: var(--text); color: #fff; border-color: var(--text);
+    }
+
+    .post-actions {
+      display: flex; gap: 8px;
+      margin-top: 18px;
+    }
+    .btn-danger {
+      background: #fff; color: var(--danger);
+      border: 1px solid var(--divider);
+    }
+    .btn-danger:hover { background: #fef2f2; border-color: var(--danger); }
+
+    .comments-section { margin-top: 36px; }
+    .comments-title {
+      font-size: 14px; font-weight: 600; color: var(--secondary);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 14px;
+    }
+    .comment-form {
+      margin-bottom: 18px;
+      padding: 14px;
+      background: var(--card); border-radius: 8px;
+    }
+    .comment-form textarea {
+      width: 100%; min-height: 70px;
+      padding: 10px 12px;
+      background: #fff; border: 1px solid var(--divider); border-radius: 6px;
+      font-family: inherit; font-size: 14px; line-height: 1.5;
+      resize: vertical;
+    }
+    .comment-form textarea:focus { outline: none; border-color: var(--text); }
+    .comment-form textarea:disabled { background: #f0f0f0; color: var(--secondary); cursor: not-allowed; }
+    .comment-form-foot {
+      display: flex; justify-content: flex-end;
+      margin-top: 8px;
+    }
+
+    .comment-item {
+      padding: 14px 0 14px 14px;
+      border-left: 2px solid var(--divider);
+      margin-bottom: 12px;
+    }
+    .comment-meta {
+      display: flex; gap: 8px;
+      font-size: 12px; color: var(--secondary);
+      margin-bottom: 6px;
+    }
+    .comment-author { font-weight: 500; color: var(--text); }
+    .comment-body {
+      font-size: 14px; line-height: 1.55;
+      white-space: pre-wrap; word-break: break-word;
+    }
+
+    /* ── Shop ── */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    .product-card {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--divider); border-radius: 12px;
+      overflow: hidden; cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+      border-color: var(--text);
+    }
+    .product-card.out {
+      opacity: 0.5;
+    }
+    .product-image {
+      aspect-ratio: 4 / 3;
+      background: linear-gradient(135deg, #e5e5e5 0%, #f5f5f5 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 56px;
+      color: var(--secondary);
+    }
+    .product-info { padding: 14px 16px 18px; }
+    .product-name {
+      font-size: 14px; font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 40px;
+    }
+    .product-price {
+      font-size: 16px; font-weight: 700;
+      letter-spacing: -0.01em;
+      font-variant-numeric: tabular-nums;
+    }
+    .product-stock {
+      font-size: 12px; color: var(--secondary); margin-top: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+    .out-badge {
+      position: absolute; top: 10px; right: 10px;
+      padding: 3px 8px;
+      background: var(--text); color: #fff;
+      border-radius: 10px;
+      font-size: 11px; font-weight: 600;
+    }
+
+    /* product detail */
+    .product-detail-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 8px;
+    }
+    .product-detail-image {
+      aspect-ratio: 1 / 1;
+      background: linear-gradient(135deg, #e5e5e5 0%, #f5f5f5 100%);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 96px; color: var(--secondary);
+    }
+    .product-detail-info h2 {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .product-detail-price {
+      font-size: 28px; font-weight: 700;
+      font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+    .product-detail-stock {
+      font-size: 13px; color: var(--secondary);
+      margin-bottom: 18px;
+    }
+    .product-detail-desc {
+      font-size: 14px; line-height: 1.65;
+      padding: 16px 0; border-top: 1px solid var(--divider); border-bottom: 1px solid var(--divider);
+      margin-bottom: 18px; white-space: pre-wrap;
+    }
+    .qty-row {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 18px;
+    }
+    .qty-label { font-size: 13px; color: var(--secondary); width: 50px; }
+    .qty-control {
+      display: inline-flex; align-items: center;
+      border: 1px solid var(--divider); border-radius: 6px;
+      overflow: hidden;
+    }
+    .qty-btn {
+      width: 36px; height: 36px;
+      background: #fff; border: 0;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .qty-btn:hover:not(:disabled) { background: var(--card); }
+    .qty-btn:disabled { color: var(--divider); cursor: not-allowed; }
+    .qty-input {
+      width: 48px; height: 36px;
+      border: 0; border-left: 1px solid var(--divider); border-right: 1px solid var(--divider);
+      text-align: center; font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+    .qty-input:focus { outline: none; }
+
+    /* cart */
+    .cart-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .cart-head h2 {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+    }
+    .cart-list {
+      border-top: 1px solid var(--divider);
+    }
+    .cart-item {
+      display: grid;
+      grid-template-columns: 64px 1fr auto auto auto;
+      align-items: center; gap: 14px;
+      padding: 16px 4px;
+      border-bottom: 1px solid var(--divider);
+    }
+    .cart-thumb {
+      width: 64px; height: 64px;
+      background: linear-gradient(135deg, #e5e5e5 0%, #f5f5f5 100%);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; color: var(--secondary);
+    }
+    .cart-info {
+      min-width: 0;
+    }
+    .cart-name {
+      font-size: 14px; font-weight: 600;
+      margin-bottom: 4px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .cart-unit {
+      font-size: 12px; color: var(--secondary);
+      font-variant-numeric: tabular-nums;
+    }
+    .cart-subtotal {
+      font-size: 14px; font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      min-width: 90px; text-align: right;
+    }
+    .cart-remove {
+      width: 32px; height: 32px;
+      border: 0; background: transparent; cursor: pointer;
+      color: var(--secondary); font-size: 18px; line-height: 1;
+      border-radius: 4px;
+    }
+    .cart-remove:hover { background: var(--card); color: var(--danger); }
+
+    .cart-summary {
+      margin-top: 24px;
+      padding: 22px 24px;
+      background: var(--card);
+      border-radius: 12px;
+    }
+    .summary-row {
+      display: flex; justify-content: space-between;
+      font-size: 14px; margin-bottom: 8px;
+    }
+    .summary-row.total {
+      padding-top: 14px;
+      border-top: 1px solid var(--divider);
+      margin-top: 8px; margin-bottom: 18px;
+      font-size: 18px; font-weight: 700;
+    }
+    .summary-row span:last-child { font-variant-numeric: tabular-nums; }
+
+    /* orders */
+    .order-list { border-top: 1px solid var(--divider); }
+    .order-item {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center; gap: 14px;
+      padding: 16px 4px;
+      border-bottom: 1px solid var(--divider);
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .order-item:hover { background: var(--card); }
+    .order-id {
+      font-size: 14px; font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .order-meta {
+      font-size: 12px; color: var(--secondary);
+      margin-top: 4px;
+    }
+    .order-amount {
+      font-size: 15px; font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px; font-weight: 500;
+    }
+    .status-pending   { background: #f3f4f6; color: #4b5563; }
+    .status-paid      { background: #dbeafe; color: #1d4ed8; }
+    .status-shipped   { background: #ffedd5; color: #c2410c; }
+    .status-completed { background: #d1fae5; color: #065f46; }
+    .status-cancelled { background: #fee2e2; color: #991b1b; }
+
+    .order-detail-meta {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--divider);
+      margin-bottom: 18px;
+      display: flex; align-items: center; gap: 12px;
+      flex-wrap: wrap;
+    }
+    .order-detail-meta h2 {
+      font-size: 22px; font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .order-items-title {
+      font-size: 12px; color: var(--secondary);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+    .order-item-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      padding: 14px 4px;
+      border-bottom: 1px solid var(--divider);
+      gap: 14px;
+    }
+    .order-item-name { font-size: 14px; font-weight: 500; }
+    .order-item-detail {
+      font-size: 12px; color: var(--secondary); margin-top: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+    .order-item-subtotal {
+      font-size: 14px; font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .order-grand-total {
+      display: flex; justify-content: flex-end;
+      padding: 18px 4px 0;
+      font-size: 18px; font-weight: 700;
+    }
+    .order-grand-total span:last-child { margin-left: 14px; font-variant-numeric: tabular-nums; }
+
+    /* Header cart badge */
+    .cart-icon {
+      position: relative;
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 6px 10px;
+      background: var(--card); border: 1px solid var(--divider); border-radius: 6px;
+      cursor: pointer; font-size: 14px;
+    }
+    .cart-icon:hover { background: #f0f0f0; }
+    .cart-count {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 20px; height: 20px;
+      padding: 0 6px;
+      background: var(--text); color: #fff;
+      border-radius: 10px;
+      font-size: 11px; font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Mobile shop adjustments */
+    @media (max-width: 720px) {
+      .product-detail-layout { grid-template-columns: 1fr; }
+      .product-detail-image { font-size: 64px; }
+      .cart-item { grid-template-columns: 48px 1fr auto; row-gap: 8px; }
+      .cart-thumb { width: 48px; height: 48px; font-size: 22px; }
+      .cart-subtotal, .cart-remove { grid-column: span 3; text-align: right; }
+    }
+
+    /* ── Form (board new/edit) ── */
+    .form-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .form-title {
+      font-size: 20px; font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .field-textarea {
+      width: 100%; min-height: 240px;
+      padding: 12px 14px;
+      background: #fff; border: 1px solid var(--divider); border-radius: 6px;
+      font-family: inherit; font-size: 14px; line-height: 1.6;
+      resize: vertical;
+    }
+    .field-textarea:focus { outline: none; border-color: var(--text); }
+    .field-counter {
+      text-align: right; font-size: 11px; color: var(--secondary);
+      margin-top: 4px;
+    }
+    .form-actions {
+      display: flex; gap: 8px; justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    /* ── 반응형 (tablet ↓ 간단 처리) ── */
+    @media (max-width: 720px) {
+      .header-inner { grid-template-columns: 1fr auto; gap: 12px; }
+      .tabs { display: none; }
+      .home-title { font-size: 28px; }
+      .home-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useRef } = React;
+    const TOKEN_KEY = 'harbor_token';
+
+    /* ──────────── api helper ──────────── */
+    async function api(path, { method = 'GET', body = null, auth = false } = {}) {
+      const headers = {};
+      if (body) headers['Content-Type'] = 'application/json';
+      if (auth) {
+        const token = localStorage.getItem(TOKEN_KEY);
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+      }
+      try {
+        const res = await fetch(path, {
+          method,
+          headers,
+          body: body ? JSON.stringify(body) : undefined,
+        });
+        const data = await res.json().catch(() => ({}));
+        return { ok: res.ok, status: res.status, data };
+      } catch (e) {
+        return { ok: false, status: 0, data: { error: '네트워크 오류', detail: e.message } };
+      }
+    }
+
+    /* ──────────── routing ──────────── */
+    function parseHash() {
+      const path = (location.hash || '').replace(/^#/, '') || '/';
+      if (path === '/' || path === '')      return { name: 'home' };
+      if (path === '/board')                return { name: 'board' };
+      if (path === '/board/new')            return { name: 'board-new' };
+      const mb = path.match(/^\/board\/post\/(\d+)(\/edit)?$/);
+      if (mb) return { name: mb[2] ? 'board-edit' : 'board-detail', id: parseInt(mb[1]) };
+      if (path === '/shop')                 return { name: 'shop' };
+      if (path === '/shop/cart')            return { name: 'shop-cart' };
+      if (path === '/shop/orders')          return { name: 'shop-orders' };
+      const ms = path.match(/^\/shop\/product\/(\d+)$/);
+      if (ms) return { name: 'shop-product', id: parseInt(ms[1]) };
+      const mo = path.match(/^\/shop\/order\/(\d+)$/);
+      if (mo) return { name: 'shop-order', id: parseInt(mo[1]) };
+      return { name: 'unknown', path };
+    }
+    function navigate(hash) { location.hash = hash; }
+
+    /* ──────────── shop helpers ──────────── */
+    const formatKRW = (n) => (Number(n) || 0).toLocaleString('ko-KR') + '원';
+    function cartTotalQuantity(cart) {
+      if (!cart || !cart.summary) return 0;
+      return cart.summary.total_quantity || 0;
+    }
+    function cartTotalAmount(cart) {
+      if (!cart || !cart.summary) return 0;
+      return cart.summary.total_amount || 0;
+    }
+    const STATUS_LABELS = {
+      pending: '주문 접수', paid: '결제 완료',
+      shipped: '배송 중',  completed: '완료',
+      cancelled: '취소',
+    };
+    const statusLabel = (s) => STATUS_LABELS[s] || s;
+    const statusClass = (s) => `status-badge status-${s}`;
+
+    /* ──────────── time utils ──────────── */
+    function timeAgo(iso) {
+      const t = new Date(iso).getTime();
+      const diff = Date.now() - t;
+      const min = Math.floor(diff / 60000);
+      if (min < 1)  return '방금';
+      if (min < 60) return `${min}분 전`;
+      const hr = Math.floor(min / 60);
+      if (hr < 24)  return `${hr}시간 전`;
+      const day = Math.floor(hr / 24);
+      if (day === 1) return '어제';
+      if (day < 7)   return `${day}일 전`;
+      return iso.slice(0, 10);
+    }
+
+    /* ──────────── validators ──────────── */
+    const isEmail = (s) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+    function pwError(p) {
+      if (!p) return '비밀번호 필수';
+      if (p.length < 8) return '비밀번호 8자 이상';
+      let kinds = 0;
+      if (/[a-zA-Z]/.test(p)) kinds++;
+      if (/\d/.test(p))       kinds++;
+      if (/[^a-zA-Z0-9]/.test(p)) kinds++;
+      if (kinds < 2) return '영문/숫자/특수문자 중 2종 이상 조합';
+      return null;
+    }
+    function dnError(s) {
+      const t = (s || '').trim();
+      if (t.length < 2 || t.length > 20) return '닉네임 2~20자';
+      return null;
+    }
+
+    /* ──────────── Toast ──────────── */
+    function Toast({ type, message }) {
+      return <div className={`toast ${type}`}>{message}</div>;
+    }
+
+    /* ──────────── Modal ──────────── */
+    function Modal({ children, onClose }) {
+      useEffect(() => {
+        const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+      }, [onClose]);
+      return (
+        <div className="modal-backdrop" onClick={onClose}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>{children}</div>
+        </div>
+      );
+    }
+
+    /* ──────────── RegisterModal ──────────── */
+    function RegisterModal({ onClose, onSuccess, onSwitch }) {
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
+      const [confirm, setConfirm] = useState('');
+      const [displayName, setDisplayName] = useState('');
+      const [errors, setErrors] = useState({});
+      const [serverError, setServerError] = useState('');
+      const [submitting, setSubmitting] = useState(false);
+
+      function validate() {
+        const e = {};
+        if (!email) e.email = '이메일 필수';
+        else if (!isEmail(email)) e.email = '이메일 형식 오류';
+        const pw = pwError(password);
+        if (pw) e.password = pw;
+        if (password && password !== confirm) e.confirm = '비밀번호 불일치';
+        const dn = dnError(displayName);
+        if (dn) e.displayName = dn;
+        return e;
+      }
+
+      async function handleSubmit(ev) {
+        ev.preventDefault();
+        setServerError('');
+        const errs = validate();
+        setErrors(errs);
+        if (Object.keys(errs).length > 0) return;
+
+        setSubmitting(true);
+        const r = await api('/api/auth?view=register', {
+          method: 'POST',
+          body: { email, password, display_name: displayName.trim() },
+        });
+        setSubmitting(false);
+
+        if (r.ok) onSuccess(r.data.token, r.data.user);
+        else setServerError(r.data.error || '가입 실패');
+      }
+
+      return (
+        <Modal onClose={onClose}>
+          <div className="modal-head">
+            <div className="modal-title">회원가입</div>
+            <div className="modal-sub">한 번 가입하면 게시판 + 쇼핑 둘 다 사용 가능</div>
+          </div>
+          <form className="modal-body" onSubmit={handleSubmit} noValidate>
+            {serverError && <div className="error-banner">{serverError}</div>}
+
+            <div className="field">
+              <label className="field-label">이메일</label>
+              <input
+                className={`field-input ${errors.email ? 'error' : ''}`}
+                type="email" autoComplete="email"
+                value={email} onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+              />
+              {errors.email && <div className="field-error">{errors.email}</div>}
+            </div>
+
+            <div className="field">
+              <label className="field-label">비밀번호</label>
+              <input
+                className={`field-input ${errors.password ? 'error' : ''}`}
+                type="password" autoComplete="new-password"
+                value={password} onChange={(e) => setPassword(e.target.value)}
+                placeholder="8자 이상, 2종 이상 조합"
+              />
+              {errors.password
+                ? <div className="field-error">{errors.password}</div>
+                : <div className="field-hint">8자 이상 + 영문/숫자/특수문자 중 2종 이상</div>}
+            </div>
+
+            <div className="field">
+              <label className="field-label">비밀번호 확인</label>
+              <input
+                className={`field-input ${errors.confirm ? 'error' : ''}`}
+                type="password" autoComplete="new-password"
+                value={confirm} onChange={(e) => setConfirm(e.target.value)}
+              />
+              {errors.confirm && <div className="field-error">{errors.confirm}</div>}
+            </div>
+
+            <div className="field">
+              <label className="field-label">닉네임</label>
+              <input
+                className={`field-input ${errors.displayName ? 'error' : ''}`}
+                type="text" autoComplete="username"
+                value={displayName} onChange={(e) => setDisplayName(e.target.value)}
+                placeholder="2~20자"
+                maxLength={20}
+              />
+              {errors.displayName && <div className="field-error">{errors.displayName}</div>}
+            </div>
+
+            <div className="modal-footer">
+              <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
+                {submitting ? '처리 중...' : '가입하기'}
+              </button>
+            </div>
+
+            <div className="modal-switch">
+              이미 계정 있으세요?{' '}
+              <button type="button" className="link-btn" onClick={onSwitch}>로그인</button>
+            </div>
+          </form>
+        </Modal>
+      );
+    }
+
+    /* ──────────── LoginModal ──────────── */
+    function LoginModal({ onClose, onSuccess, onSwitch }) {
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
+      const [serverError, setServerError] = useState('');
+      const [submitting, setSubmitting] = useState(false);
+
+      async function handleSubmit(ev) {
+        ev.preventDefault();
+        setServerError('');
+        if (!email || !password) {
+          setServerError('이메일과 비밀번호를 입력해주세요');
+          return;
+        }
+        setSubmitting(true);
+        const r = await api('/api/auth?view=login', {
+          method: 'POST',
+          body: { email, password },
+        });
+        setSubmitting(false);
+        if (r.ok) onSuccess(r.data.token, r.data.user);
+        else setServerError(r.data.error || '로그인 실패');
+      }
+
+      return (
+        <Modal onClose={onClose}>
+          <div className="modal-head">
+            <div className="modal-title">로그인</div>
+            <div className="modal-sub">Harbor Community에 다시 오신 걸 환영해요</div>
+          </div>
+          <form className="modal-body" onSubmit={handleSubmit} noValidate>
+            {serverError && <div className="error-banner">{serverError}</div>}
+
+            <div className="field">
+              <label className="field-label">이메일</label>
+              <input
+                className="field-input"
+                type="email" autoComplete="email"
+                value={email} onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div className="field">
+              <label className="field-label">비밀번호</label>
+              <input
+                className="field-input"
+                type="password" autoComplete="current-password"
+                value={password} onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+            <div className="modal-footer">
+              <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
+                {submitting ? '처리 중...' : '로그인'}
+              </button>
+            </div>
+
+            <div className="modal-switch">
+              계정이 없으세요?{' '}
+              <button type="button" className="link-btn" onClick={onSwitch}>회원가입</button>
+            </div>
+          </form>
+        </Modal>
+      );
+    }
+
+    /* ──────────── Header ──────────── */
+    function Header({ user, loading, onOpenModal, onLogout, onTab, onLogo, cart }) {
+      const [open, setOpen] = useState(false);
+      const ref = useRef(null);
+
+      useEffect(() => {
+        if (!open) return;
+        const onClick = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+        document.addEventListener('mousedown', onClick);
+        return () => document.removeEventListener('mousedown', onClick);
+      }, [open]);
+
+      const cartCount = user ? cartTotalQuantity(cart) : 0;
+
+      return (
+        <header className="header">
+          <div className="header-inner">
+            <div className="logo" onClick={onLogo}>🌊 Harbor Community</div>
+            <nav className="tabs">
+              <button className="tab" onClick={() => onTab('게시판')}>📝 게시판</button>
+              <button className="tab" onClick={() => onTab('쇼핑')}>🛍️ 쇼핑</button>
+            </nav>
+            <div className="header-right">
+              {loading ? (
+                <div className="skeleton-pulse" />
+              ) : user ? (
+                <>
+                  {cartCount > 0 && (
+                    <button className="cart-icon" onClick={() => navigate('#/shop/cart')} title="장바구니">
+                      <span>🛒</span>
+                      <span className="cart-count">{cartCount}</span>
+                    </button>
+                  )}
+                  <div className="user-menu" ref={ref}>
+                    <button className="user-trigger" onClick={() => setOpen(!open)}>
+                      {user.display_name} ▾
+                    </button>
+                    {open && (
+                      <div className="dropdown">
+                        <button onClick={() => { setOpen(false); navigate('#/shop/orders'); }}>📦 주문 내역</button>
+                        <button onClick={() => { setOpen(false); onLogout(); }}>로그아웃</button>
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <button className="btn" onClick={() => onOpenModal('login')}>로그인</button>
+                  <button className="btn btn-primary" onClick={() => onOpenModal('register')}>회원가입</button>
+                </>
+              )}
+            </div>
+          </div>
+        </header>
+      );
+    }
+
+    /* ──────────── Home (guest / user) ──────────── */
+    function HomeGuest({ onCTA }) {
+      return (
+        <div className="home-guest">
+          <h1 className="home-title">커뮤니티 + 마켓플레이스,<br/>한 자리에.</h1>
+          <p className="home-sub">harbor.school 5주차 Q5+Q6 통합 사이트 — 게시판과 쇼핑이 한 화면에서.</p>
+          <button className="home-cta" onClick={onCTA}>회원가입하고 시작하기</button>
+        </div>
+      );
+    }
+
+    function HomeUser({ user, onSelectTab }) {
+      return (
+        <div>
+          <div className="home-user-greeting">안녕하세요, {user.display_name}님 👋</div>
+          <div className="home-cards">
+            <div className="home-card" onClick={() => onSelectTab('게시판')}>
+              <div className="home-card-icon">📝</div>
+              <div className="home-card-title">게시판으로</div>
+              <div className="home-card-desc">5주차 후기·디버깅 노트·잡담</div>
+            </div>
+            <div className="home-card" onClick={() => onSelectTab('쇼핑')}>
+              <div className="home-card-icon">🛍️</div>
+              <div className="home-card-title">쇼핑으로</div>
+              <div className="home-card-desc">데모 굿즈 10종 · 머그컵·후드티·스티커</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ──────────── Board: List ──────────── */
+    function BoardList({ user, onRequireLogin, showToast }) {
+      const [posts, setPosts] = useState([]);
+      const [total, setTotal] = useState(0);
+      const [offset, setOffset] = useState(0);
+      const [loading, setLoading] = useState(true);
+      const [loadingMore, setLoadingMore] = useState(false);
+      const LIMIT = 20;
+
+      async function fetchPage(off, append) {
+        const r = await api(`/api/posts?view=list&limit=${LIMIT}&offset=${off}`);
+        if (r.ok) {
+          setTotal(r.data.meta.total);
+          setPosts((prev) => (append ? [...prev, ...r.data.data] : r.data.data));
+        }
+      }
+
+      useEffect(() => {
+        (async () => {
+          setLoading(true);
+          await fetchPage(0, false);
+          setLoading(false);
+        })();
+      }, []);
+
+      async function loadMore() {
+        setLoadingMore(true);
+        const newOffset = posts.length;
+        await fetchPage(newOffset, true);
+        setOffset(newOffset);
+        setLoadingMore(false);
+      }
+
+      function onClickNew() {
+        if (!user) {
+          onRequireLogin('글 작성은 로그인이 필요해요');
+          return;
+        }
+        navigate('#/board/new');
+      }
+
+      const hasMore = posts.length < total;
+
+      return (
+        <div>
+          <div className="board-head">
+            <h2>📝 게시판</h2>
+            <button className="btn btn-primary" onClick={onClickNew}>+ 새 글</button>
+          </div>
+
+          {loading ? (
+            <div className="empty-state">불러오는 중...</div>
+          ) : posts.length === 0 ? (
+            <div className="empty-state">아직 글이 없어요. 첫 글을 남겨보세요!</div>
+          ) : (
+            <>
+              <div className="post-list">
+                {posts.map((p) => (
+                  <div key={p.id} className="post-item" onClick={() => navigate(`#/board/post/${p.id}`)}>
+                    <div className="post-item-title">
+                      <span>{p.title}</span>
+                      {p.comment_count > 0 && <span className="comment-count">({p.comment_count})</span>}
+                      {user && user.id === p.user.id && <span className="badge-mine">내 글</span>}
+                    </div>
+                    <div className="post-item-meta">
+                      {p.user.display_name} · {timeAgo(p.created_at)} · 조회 {p.view_count}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {hasMore && (
+                <button className="load-more" onClick={loadMore} disabled={loadingMore}>
+                  {loadingMore ? '불러오는 중...' : '더 보기'}
+                </button>
+              )}
+            </>
+          )}
+        </div>
+      );
+    }
+
+    /* ──────────── Board: New / Edit (form) ──────────── */
+    function BoardForm({ mode, user, postId, showToast }) {
+      // mode: 'new' | 'edit'
+      const [title, setTitle] = useState('');
+      const [content, setContent] = useState('');
+      const [loading, setLoading] = useState(mode === 'edit');
+      const [submitting, setSubmitting] = useState(false);
+      const [errors, setErrors] = useState({});
+      const initialRef = useRef({ title: '', content: '' });
+
+      useEffect(() => {
+        if (mode !== 'edit' || !postId) return;
+        (async () => {
+          const r = await api(`/api/posts?view=get&id=${postId}`, { auth: true });
+          if (!r.ok) {
+            showToast('error', '글을 불러올 수 없어요');
+            navigate('#/board');
+            return;
+          }
+          const post = r.data.data.post;
+          if (!user || user.id !== post.user.id) {
+            showToast('error', '본인 글만 수정할 수 있어요');
+            navigate(`#/board/post/${postId}`);
+            return;
+          }
+          setTitle(post.title);
+          setContent(post.content);
+          initialRef.current = { title: post.title, content: post.content };
+          setLoading(false);
+        })();
+      }, [mode, postId]);
+
+      function validate() {
+        const e = {};
+        const t = title.trim();
+        if (!t) e.title = '제목 필수';
+        else if (t.length > 200) e.title = '제목 200자 이내';
+        if (!content.trim()) e.content = '내용 필수';
+        return e;
+      }
+
+      async function handleSubmit(ev) {
+        ev.preventDefault();
+        const errs = validate();
+        setErrors(errs);
+        if (Object.keys(errs).length > 0) return;
+
+        setSubmitting(true);
+        const r = mode === 'new'
+          ? await api('/api/posts?view=create', { method: 'POST', auth: true,
+              body: { title: title.trim(), content } })
+          : await api(`/api/posts?view=update&id=${postId}`, { method: 'PUT', auth: true,
+              body: { title: title.trim(), content } });
+        setSubmitting(false);
+
+        if (!r.ok) {
+          showToast('error', r.data.error || '저장 실패');
+          return;
+        }
+        if (mode === 'new') {
+          showToast('success', '글이 등록됐어요');
+          navigate(`#/board/post/${r.data.data.id}`);
+        } else {
+          showToast('success', '수정됐어요');
+          navigate(`#/board/post/${postId}`);
+        }
+      }
+
+      function handleCancel() {
+        const dirty = title !== initialRef.current.title || content !== initialRef.current.content;
+        if (dirty && !confirm('작성 중인 내용이 사라져요. 나가시겠어요?')) return;
+        if (mode === 'edit') navigate(`#/board/post/${postId}`);
+        else navigate('#/board');
+      }
+
+      if (loading) return <div className="empty-state">불러오는 중...</div>;
+
+      return (
+        <div>
+          <button className="back-link" onClick={handleCancel}>← 취소</button>
+          <div className="form-card">
+            <div className="form-title">{mode === 'new' ? '새 글 작성' : '글 수정'}</div>
+            <form onSubmit={handleSubmit} noValidate>
+              <div className="field">
+                <label className="field-label">제목</label>
+                <input
+                  className={`field-input ${errors.title ? 'error' : ''}`}
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  maxLength={200}
+                  placeholder="제목"
+                />
+                <div className="field-counter">{title.length} / 200</div>
+                {errors.title && <div className="field-error">{errors.title}</div>}
+              </div>
+
+              <div className="field">
+                <label className="field-label">내용</label>
+                <textarea
+                  className="field-textarea"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="내용을 입력하세요"
+                />
+                <div className="field-counter">{content.length}자</div>
+                {errors.content && <div className="field-error">{errors.content}</div>}
+              </div>
+
+              <div className="form-actions">
+                <button type="button" className="btn" onClick={handleCancel}>취소</button>
+                <button type="submit" className="btn btn-primary" disabled={submitting}>
+                  {submitting ? '저장 중...' : (mode === 'new' ? '등록' : '저장')}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    /* ──────────── Board: Detail ──────────── */
+    const REACTIONS = [
+      { type: 'like',  emoji: '👍' },
+      { type: 'heart', emoji: '❤️' },
+      { type: 'fire',  emoji: '🔥' },
+    ];
+
+    function BoardDetail({ user, postId, onRequireLogin, showToast }) {
+      const [data, setData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [notFound, setNotFound] = useState(false);
+      const [comment, setComment] = useState('');
+      const [submitting, setSubmitting] = useState(false);
+
+      async function load() {
+        setLoading(true);
+        const r = await api(`/api/posts?view=get&id=${postId}`, { auth: !!user });
+        if (r.status === 404) { setNotFound(true); setLoading(false); return; }
+        if (r.ok) setData(r.data.data);
+        setLoading(false);
+      }
+
+      useEffect(() => { load(); }, [postId, user?.id]);
+
+      async function onReact(type) {
+        if (!user) { onRequireLogin('반응 남기려면 로그인이 필요해요'); return; }
+        const r = await api('/api/posts?view=react', {
+          method: 'POST', auth: true,
+          body: { post_id: postId, reaction_type: type },
+        });
+        if (!r.ok) { showToast('error', r.data.error || '실패'); return; }
+        // 낙관적 업데이트
+        setData((d) => {
+          if (!d) return d;
+          const my = new Set(d.my_reactions || []);
+          const reactions = { ...(d.reactions || {}) };
+          if (r.data.data.toggled === 'added') {
+            my.add(type);
+            reactions[type] = (reactions[type] || 0) + 1;
+          } else {
+            my.delete(type);
+            reactions[type] = Math.max(0, (reactions[type] || 1) - 1);
+            if (reactions[type] === 0) delete reactions[type];
+          }
+          return { ...d, my_reactions: Array.from(my), reactions };
+        });
+      }
+
+      async function onComment(ev) {
+        ev.preventDefault();
+        if (!user) return;
+        const c = comment.trim();
+        if (!c) return;
+        setSubmitting(true);
+        const r = await api('/api/posts?view=comment', {
+          method: 'POST', auth: true,
+          body: { post_id: postId, content: c },
+        });
+        setSubmitting(false);
+        if (!r.ok) { showToast('error', r.data.error || '실패'); return; }
+        // append in-place
+        setData((d) => d ? {
+          ...d,
+          comments: [
+            ...d.comments,
+            {
+              id: r.data.data.id,
+              content: c,
+              created_at: r.data.data.created_at,
+              user: { id: user.id, display_name: user.display_name },
+            },
+          ],
+        } : d);
+        setComment('');
+      }
+
+      async function onDelete() {
+        if (!confirm('정말 삭제할까요?')) return;
+        const r = await api(`/api/posts?view=delete&id=${postId}`, { method: 'DELETE', auth: true });
+        if (!r.ok) { showToast('error', r.data.error || '삭제 실패'); return; }
+        showToast('success', '삭제됐어요');
+        navigate('#/board');
+      }
+
+      if (loading) return <div className="empty-state">불러오는 중...</div>;
+      if (notFound) return (
+        <div>
+          <button className="back-link" onClick={() => navigate('#/board')}>← 목록으로</button>
+          <div className="empty-state">글을 찾을 수 없어요</div>
+        </div>
+      );
+      if (!data) return null;
+
+      const post = data.post;
+      const isMine = user && user.id === post.user.id;
+      const myReactions = new Set(data.my_reactions || []);
+
+      return (
+        <div className="post-detail">
+          <button className="back-link" onClick={() => navigate('#/board')}>← 목록으로</button>
+
+          <h2>{post.title}</h2>
+          <div className="post-detail-meta">
+            {post.user.display_name} · {timeAgo(post.created_at)} · 조회 {post.view_count}
+          </div>
+          <div className="post-body">{post.content}</div>
+
+          <div className="reactions">
+            {REACTIONS.map((r) => (
+              <button
+                key={r.type}
+                className={`react-btn ${myReactions.has(r.type) ? 'active' : ''}`}
+                onClick={() => onReact(r.type)}
+              >
+                <span>{r.emoji}</span>
+                <span>{data.reactions[r.type] || 0}</span>
+              </button>
+            ))}
+          </div>
+
+          {isMine && (
+            <div className="post-actions">
+              <button className="btn" onClick={() => navigate(`#/board/post/${post.id}/edit`)}>수정</button>
+              <button className="btn btn-danger" onClick={onDelete}>삭제</button>
+            </div>
+          )}
+
+          <div className="comments-section">
+            <div className="comments-title">댓글 {data.comments.length}개</div>
+
+            <form className="comment-form" onSubmit={onComment}>
+              <textarea
+                value={user ? comment : ''}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder={user ? '댓글을 남겨보세요' : '로그인이 필요해요'}
+                disabled={!user || submitting}
+                maxLength={2000}
+              />
+              <div className="comment-form-foot">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={!user || submitting || !comment.trim()}
+                >
+                  {submitting ? '등록 중...' : '등록'}
+                </button>
+              </div>
+            </form>
+
+            {data.comments.map((c) => (
+              <div key={c.id} className="comment-item">
+                <div className="comment-meta">
+                  <span className="comment-author">{c.user.display_name}</span>
+                  <span>· {timeAgo(c.created_at)}</span>
+                </div>
+                <div className="comment-body">{c.content}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    /* ──────────── Shop: ProductList ──────────── */
+    function ShopList({ showToast }) {
+      const [products, setProducts] = useState([]);
+      const [loading, setLoading] = useState(true);
+
+      useEffect(() => {
+        (async () => {
+          const r = await api('/api/shop?view=products&limit=100');
+          if (r.ok) setProducts(r.data.data);
+          setLoading(false);
+        })();
+      }, []);
+
+      if (loading) return <div className="empty-state">불러오는 중...</div>;
+      if (products.length === 0) return <div className="empty-state">상품이 없어요</div>;
+
+      function onClick(p) {
+        if (p.stock === 0) { showToast('info', '품절된 상품입니다'); return; }
+        navigate(`#/shop/product/${p.id}`);
+      }
+
+      return (
+        <div>
+          <div className="board-head">
+            <h2>🛍️ 쇼핑</h2>
+          </div>
+          <div className="product-grid">
+            {products.map((p) => (
+              <div
+                key={p.id}
+                className={`product-card ${p.stock === 0 ? 'out' : ''}`}
+                onClick={() => onClick(p)}
+              >
+                {p.stock === 0 && <div className="out-badge">품절</div>}
+                <div className="product-image">📦</div>
+                <div className="product-info">
+                  <div className="product-name">{p.name}</div>
+                  <div className="product-price">{formatKRW(p.price)}</div>
+                  <div className="product-stock">재고 {p.stock}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    /* ──────────── Shop: ProductDetail ──────────── */
+    function ShopProductDetail({ id, user, onRequireLogin, refreshCart, showToast }) {
+      const [product, setProduct] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [notFound, setNotFound] = useState(false);
+      const [qty, setQty] = useState(1);
+      const [adding, setAdding] = useState(false);
+
+      useEffect(() => {
+        (async () => {
+          const r = await api(`/api/shop?view=product&id=${id}`);
+          if (r.status === 404) setNotFound(true);
+          else if (r.ok) setProduct(r.data.data);
+          setLoading(false);
+        })();
+      }, [id]);
+
+      function clamp(n) {
+        if (!product) return 1;
+        const max = Math.min(99, product.stock);
+        return Math.max(1, Math.min(max, n));
+      }
+
+      async function onAdd() {
+        if (!user) { onRequireLogin('장바구니 이용은 로그인이 필요해요'); return; }
+        if (product.stock === 0) { showToast('error', '품절된 상품입니다'); return; }
+        setAdding(true);
+        const r = await api('/api/shop?view=cart_add', {
+          method: 'POST', auth: true,
+          body: { product_id: id, quantity: qty },
+        });
+        setAdding(false);
+        if (!r.ok) {
+          const detail = r.data.detail;
+          if (detail) showToast('error', `${detail.name}: 재고 ${detail.available}개`);
+          else showToast('error', r.data.error || '담기 실패');
+          return;
+        }
+        showToast('success', `장바구니에 담았어요`);
+        await refreshCart();
+      }
+
+      if (loading) return <div className="empty-state">불러오는 중...</div>;
+      if (notFound) return (
+        <div>
+          <button className="back-link" onClick={() => navigate('#/shop')}>← 목록으로</button>
+          <div className="empty-state">상품을 찾을 수 없어요</div>
+        </div>
+      );
+      if (!product) return null;
+
+      const max = Math.min(99, product.stock);
+      const isOut = product.stock === 0;
+
+      return (
+        <div>
+          <button className="back-link" onClick={() => navigate('#/shop')}>← 목록으로</button>
+          <div className="product-detail-layout">
+            <div className="product-detail-image">📦</div>
+            <div className="product-detail-info">
+              <h2>{product.name}</h2>
+              <div className="product-detail-price">{formatKRW(product.price)}</div>
+              <div className="product-detail-stock">
+                {isOut ? '품절' : `재고 ${product.stock}개`}
+              </div>
+              {product.description && (
+                <div className="product-detail-desc">{product.description}</div>
+              )}
+
+              <div className="qty-row">
+                <span className="qty-label">수량</span>
+                <div className="qty-control">
+                  <button className="qty-btn" disabled={qty <= 1 || isOut} onClick={() => setQty(clamp(qty - 1))}>−</button>
+                  <input
+                    className="qty-input"
+                    type="text" inputMode="numeric"
+                    value={qty}
+                    disabled={isOut}
+                    onChange={(e) => {
+                      const n = parseInt(e.target.value);
+                      setQty(Number.isInteger(n) ? n : qty);
+                    }}
+                    onBlur={() => setQty(clamp(qty))}
+                  />
+                  <button className="qty-btn" disabled={qty >= max || isOut} onClick={() => setQty(clamp(qty + 1))}>+</button>
+                </div>
+              </div>
+
+              <button
+                className="btn btn-primary btn-block"
+                disabled={isOut || adding}
+                onClick={onAdd}
+              >
+                {isOut ? '품절' : (adding ? '담는 중...' : '🛒 장바구니 담기')}
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ──────────── Shop: Cart ──────────── */
+    function ShopCart({ user, cart, refreshCart, showToast }) {
+      const [updating, setUpdating] = useState(false);
+      const [ordering, setOrdering] = useState(false);
+
+      async function changeQty(item, newQty) {
+        const max = Math.min(99, item.product.stock);
+        const n = Math.max(0, Math.min(max, newQty));
+        if (n === item.quantity) return;
+        setUpdating(true);
+        const r = await api('/api/shop?view=cart_update', {
+          method: 'PUT', auth: true,
+          body: { cart_item_id: item.cart_item_id, quantity: n },
+        });
+        setUpdating(false);
+        if (!r.ok) {
+          const detail = r.data.detail;
+          if (detail) showToast('error', `${detail.name}: 재고 ${detail.available}개`);
+          else showToast('error', r.data.error || '변경 실패');
+          return;
+        }
+        await refreshCart();
+      }
+
+      async function onRemove(item) {
+        await changeQty(item, 0);
+      }
+
+      async function onClearAll() {
+        if (!confirm('장바구니를 비울까요?')) return;
+        setUpdating(true);
+        const r = await api('/api/shop?view=cart_clear', { method: 'DELETE', auth: true });
+        setUpdating(false);
+        if (!r.ok) { showToast('error', '실패'); return; }
+        await refreshCart();
+        showToast('info', '장바구니를 비웠어요');
+      }
+
+      async function onOrder() {
+        if (!cart || cart.items.length === 0) return;
+        const total = cartTotalAmount(cart);
+        if (!confirm(`총 ${formatKRW(total)}, 주문할까요?`)) return;
+        setOrdering(true);
+        const r = await api('/api/shop?view=order_create', { method: 'POST', auth: true });
+        setOrdering(false);
+        if (!r.ok) {
+          const detail = r.data.detail;
+          if (r.status === 409 && detail) {
+            showToast('error', `재고 부족: ${detail.name} (요청 ${detail.requested}, 가용 ${detail.available})`);
+            await refreshCart();
+            return;
+          }
+          showToast('error', r.data.error || '주문 실패');
+          return;
+        }
+        showToast('success', '주문이 완료됐어요!');
+        await refreshCart();
+        navigate(`#/shop/order/${r.data.data.order_id}`);
+      }
+
+      if (!cart) return <div className="empty-state">불러오는 중...</div>;
+      const items = cart.items || [];
+
+      return (
+        <div>
+          <div className="cart-head">
+            <h2>🛒 장바구니</h2>
+            {items.length > 0 && (
+              <button className="btn" onClick={onClearAll} disabled={updating}>전체 비우기</button>
+            )}
+          </div>
+
+          {items.length === 0 ? (
+            <div className="empty-state">
+              <div style={{ marginBottom: 16 }}>장바구니가 비어있어요</div>
+              <button className="btn btn-primary" onClick={() => navigate('#/shop')}>쇼핑하러 가기</button>
+            </div>
+          ) : (
+            <>
+              <div className="cart-list">
+                {items.map((it) => (
+                  <div key={it.cart_item_id} className="cart-item">
+                    <div className="cart-thumb">📦</div>
+                    <div className="cart-info">
+                      <div className="cart-name">{it.product.name}</div>
+                      <div className="cart-unit">{formatKRW(it.product.price)}</div>
+                    </div>
+                    <div className="qty-control">
+                      <button className="qty-btn" disabled={updating || it.quantity <= 1} onClick={() => changeQty(it, it.quantity - 1)}>−</button>
+                      <input className="qty-input" type="text" value={it.quantity} readOnly />
+                      <button className="qty-btn" disabled={updating || it.quantity >= Math.min(99, it.product.stock)} onClick={() => changeQty(it, it.quantity + 1)}>+</button>
+                    </div>
+                    <div className="cart-subtotal">{formatKRW(it.product.price * it.quantity)}</div>
+                    <button className="cart-remove" onClick={() => onRemove(it)} disabled={updating} title="삭제">×</button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="cart-summary">
+                <div className="summary-row">
+                  <span>상품 종류</span>
+                  <span>{cart.summary.item_count}종</span>
+                </div>
+                <div className="summary-row">
+                  <span>총 수량</span>
+                  <span>{cart.summary.total_quantity}개</span>
+                </div>
+                <div className="summary-row total">
+                  <span>합계</span>
+                  <span>{formatKRW(cart.summary.total_amount)}</span>
+                </div>
+                <button className="btn btn-primary btn-block" disabled={ordering || items.length === 0} onClick={onOrder}>
+                  {ordering ? '주문 중...' : '주문하기'}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      );
+    }
+
+    /* ──────────── Shop: Orders / Order ──────────── */
+    function ShopOrders({ showToast }) {
+      const [orders, setOrders] = useState([]);
+      const [loading, setLoading] = useState(true);
+
+      useEffect(() => {
+        (async () => {
+          const r = await api('/api/shop?view=orders&limit=50', { auth: true });
+          if (r.ok) setOrders(r.data.data);
+          setLoading(false);
+        })();
+      }, []);
+
+      if (loading) return <div className="empty-state">불러오는 중...</div>;
+
+      return (
+        <div>
+          <div className="board-head">
+            <h2>📦 주문 내역</h2>
+          </div>
+          {orders.length === 0 ? (
+            <div className="empty-state">
+              <div style={{ marginBottom: 16 }}>아직 주문이 없어요</div>
+              <button className="btn btn-primary" onClick={() => navigate('#/shop')}>쇼핑하러 가기</button>
+            </div>
+          ) : (
+            <div className="order-list">
+              {orders.map((o) => (
+                <div key={o.id} className="order-item" onClick={() => navigate(`#/shop/order/${o.id}`)}>
+                  <div>
+                    <div className="order-id">주문 #{o.id}</div>
+                    <div className="order-meta">{o.item_count}종 상품 · {timeAgo(o.created_at)}</div>
+                  </div>
+                  <div className={statusClass(o.status)}>{statusLabel(o.status)}</div>
+                  <div className="order-amount">{formatKRW(o.total_amount)}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    function ShopOrder({ id, showToast }) {
+      const [data, setData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [notFound, setNotFound] = useState(false);
+
+      useEffect(() => {
+        (async () => {
+          const r = await api(`/api/shop?view=order&id=${id}`, { auth: true });
+          if (r.status === 404) { setNotFound(true); setLoading(false); return; }
+          if (r.status === 403) {
+            showToast('error', '본인 주문만 볼 수 있어요');
+            navigate('#/shop/orders');
+            return;
+          }
+          if (r.ok) setData(r.data.data);
+          setLoading(false);
+        })();
+      }, [id]);
+
+      if (loading) return <div className="empty-state">불러오는 중...</div>;
+      if (notFound) return (
+        <div>
+          <button className="back-link" onClick={() => navigate('#/shop/orders')}>← 주문 내역으로</button>
+          <div className="empty-state">주문을 찾을 수 없어요</div>
+        </div>
+      );
+      if (!data) return null;
+
+      const o = data.order;
+
+      return (
+        <div>
+          <button className="back-link" onClick={() => navigate('#/shop/orders')}>← 주문 내역으로</button>
+          <div className="order-detail-meta">
+            <h2>주문 #{o.id}</h2>
+            <div className={statusClass(o.status)}>{statusLabel(o.status)}</div>
+            <div style={{ color: 'var(--secondary)', fontSize: 13 }}>{timeAgo(o.created_at)}</div>
+          </div>
+
+          <div className="order-items-title">주문 상품 (스냅샷)</div>
+          {data.items.map((it) => (
+            <div key={it.id} className="order-item-row">
+              <div>
+                <div className="order-item-name">{it.product_name}</div>
+                <div className="order-item-detail">{formatKRW(it.product_price)} × {it.quantity}</div>
+              </div>
+              <div className="order-item-subtotal">{formatKRW(it.subtotal)}</div>
+            </div>
+          ))}
+
+          <div className="order-grand-total">
+            <span>총 결제 금액</span>
+            <span>{formatKRW(o.total_amount)}</span>
+          </div>
+        </div>
+      );
+    }
+
+    /* ──────────── App ──────────── */
+    function App() {
+      const [user, setUser] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [modal, setModal] = useState(null);
+      const [toast, setToast] = useState(null);
+      const [route, setRoute] = useState(parseHash());
+      const [cart, setCart] = useState(null);
+      const toastTimer = useRef(null);
+      const pendingNavRef = useRef(null);
+
+      function showToast(type, message) {
+        if (toastTimer.current) clearTimeout(toastTimer.current);
+        setToast({ type, message });
+        toastTimer.current = setTimeout(() => setToast(null), 3000);
+      }
+
+      // hashchange 라우팅
+      useEffect(() => {
+        const onHash = () => setRoute(parseHash());
+        window.addEventListener('hashchange', onHash);
+        return () => window.removeEventListener('hashchange', onHash);
+      }, []);
+
+      // 자동 로그인 복원
+      useEffect(() => {
+        (async () => {
+          const token = localStorage.getItem(TOKEN_KEY);
+          if (!token) { setLoading(false); return; }
+          const r = await api('/api/auth?view=me', { auth: true });
+          if (r.ok) setUser(r.data.user);
+          else      localStorage.removeItem(TOKEN_KEY);
+          setLoading(false);
+        })();
+      }, []);
+
+      // user 변경 시 cart 초기 로드 (로그인 직후)
+      async function refreshCart() {
+        if (!user) { setCart(null); return; }
+        const r = await api('/api/shop?view=cart', { auth: true });
+        if (r.ok) setCart(r.data.data);
+      }
+      useEffect(() => {
+        if (user) refreshCart();
+        else setCart(null);
+      }, [user?.id]);
+
+      function handleAuthSuccess(token, userData) {
+        localStorage.setItem(TOKEN_KEY, token);
+        setUser(userData);
+        setModal(null);
+        showToast('success', `안녕하세요, ${userData.display_name}님 👋`);
+        if (pendingNavRef.current) {
+          const dest = pendingNavRef.current;
+          pendingNavRef.current = null;
+          navigate(dest);
+        }
+      }
+
+      async function handleLogout() {
+        await api('/api/auth?view=logout', { method: 'POST', auth: true });
+        localStorage.removeItem(TOKEN_KEY);
+        setUser(null);
+        setCart(null);
+        showToast('info', '로그아웃됐어요');
+        navigate('#/');
+      }
+
+      function onRequireLogin(message, redirectTo) {
+        if (redirectTo) pendingNavRef.current = redirectTo;
+        showToast('info', message || '로그인이 필요해요');
+        setModal('login');
+      }
+
+      function onHeaderTab(name) {
+        if (name === '게시판') navigate('#/board');
+        else if (name === '쇼핑') navigate('#/shop');
+      }
+
+      // 라우트별 본문
+      let content = null;
+      if (loading) {
+        content = null;
+      } else if (route.name === 'home') {
+        content = user
+          ? <HomeUser user={user} onSelectTab={(t) => {
+              if (t === '게시판') navigate('#/board');
+              else if (t === '쇼핑') navigate('#/shop');
+            }} />
+          : <HomeGuest onCTA={() => setModal('register')} />;
+      } else if (route.name === 'board') {
+        content = <BoardList user={user} onRequireLogin={(msg) => onRequireLogin(msg, '#/board/new')} showToast={showToast} />;
+      } else if (route.name === 'board-new') {
+        if (!user) {
+          if (!pendingNavRef.current) pendingNavRef.current = '#/board/new';
+          if (modal !== 'login') setModal('login');
+          setTimeout(() => navigate('#/'), 0);
+          content = null;
+        } else {
+          content = <BoardForm mode="new" user={user} showToast={showToast} />;
+        }
+      } else if (route.name === 'board-detail') {
+        content = <BoardDetail user={user} postId={route.id}
+          onRequireLogin={(msg) => onRequireLogin(msg)} showToast={showToast} />;
+      } else if (route.name === 'board-edit') {
+        if (!user) {
+          if (modal !== 'login') setModal('login');
+          setTimeout(() => navigate(`#/board/post/${route.id}`), 0);
+          content = null;
+        } else {
+          content = <BoardForm mode="edit" user={user} postId={route.id} showToast={showToast} />;
+        }
+      } else if (route.name === 'shop') {
+        content = <ShopList showToast={showToast} />;
+      } else if (route.name === 'shop-product') {
+        content = <ShopProductDetail
+          id={route.id} user={user}
+          onRequireLogin={(msg) => onRequireLogin(msg, `#/shop/product/${route.id}`)}
+          refreshCart={refreshCart} showToast={showToast} />;
+      } else if (route.name === 'shop-cart') {
+        if (!user) {
+          if (!pendingNavRef.current) pendingNavRef.current = '#/shop/cart';
+          if (modal !== 'login') setModal('login');
+          setTimeout(() => navigate('#/'), 0);
+          content = null;
+        } else {
+          content = <ShopCart user={user} cart={cart}
+            refreshCart={refreshCart} showToast={showToast} />;
+        }
+      } else if (route.name === 'shop-orders') {
+        if (!user) {
+          if (!pendingNavRef.current) pendingNavRef.current = '#/shop/orders';
+          if (modal !== 'login') setModal('login');
+          setTimeout(() => navigate('#/'), 0);
+          content = null;
+        } else {
+          content = <ShopOrders showToast={showToast} />;
+        }
+      } else if (route.name === 'shop-order') {
+        if (!user) {
+          if (modal !== 'login') setModal('login');
+          setTimeout(() => navigate('#/'), 0);
+          content = null;
+        } else {
+          content = <ShopOrder id={route.id} showToast={showToast} />;
+        }
+      } else {
+        content = <div className="empty-state">페이지를 찾을 수 없어요</div>;
+      }
+
+      return (
+        <>
+          <Header
+            user={user}
+            loading={loading}
+            cart={cart}
+            onOpenModal={setModal}
+            onLogout={handleLogout}
+            onTab={onHeaderTab}
+            onLogo={() => navigate('#/')}
+          />
+          <main className="main">{content}</main>
+
+          {modal === 'register' && (
+            <RegisterModal
+              onClose={() => setModal(null)}
+              onSuccess={handleAuthSuccess}
+              onSwitch={() => setModal('login')}
+            />
+          )}
+          {modal === 'login' && (
+            <LoginModal
+              onClose={() => setModal(null)}
+              onSuccess={handleAuthSuccess}
+              onSwitch={() => setModal('register')}
+            />
+          )}
+
+          {toast && <Toast type={toast.type} message={toast.message} />}
+        </>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

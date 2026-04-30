@@ -1,0 +1,48 @@
+# --- Environment / Secrets ---
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+*.pem
+*.key
+
+# --- Node.js ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Build / Framework outputs ---
+.next/
+.vercel/
+.turbo/
+dist/
+build/
+out/
+
+# --- dev-server runtime artifacts ---
+dev.err
+dev.out
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Editors ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Misc ---
+.cache/
+tmp/
+*.tmp
+*.bak
