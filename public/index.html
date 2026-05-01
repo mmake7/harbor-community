@@ -706,6 +706,143 @@
       .home-title { font-size: 28px; }
       .home-cards { grid-template-columns: 1fr; }
     }
+
+    /* ── Moon Cafe (Q7+Q8) ── */
+    .moon-page {
+      position: relative;
+      /* 부모 .main의 padding(64/24/96)을 상쇄해서 full-width 다크 배경 */
+      margin: -64px calc(-50vw + 50%) -96px;
+      padding: 32px max(24px, calc(50vw - 540px)) 64px;
+      background: linear-gradient(180deg, #1a2845 0%, #2a4365 100%);
+      color: #e0e1dd;
+      min-height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+    .moon-stars {
+      position: absolute; inset: 0;
+      pointer-events: none; z-index: 0;
+    }
+    @keyframes moon-twinkle {
+      0%, 100% { opacity: 0.3; }
+      50%      { opacity: 1; }
+    }
+    .moon-content {
+      position: relative; z-index: 1;
+      max-width: 1024px; margin: 0 auto;
+    }
+    .moon-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 12px; margin-bottom: 16px;
+      border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    }
+    .moon-title {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 16px; font-weight: 500; color: #e0e1dd;
+    }
+    .moon-user {
+      display: flex; align-items: center; gap: 12px;
+      color: #a8b2c1; font-size: 13px;
+    }
+    .moon-home-btn {
+      background: transparent; border: 0.5px solid rgba(255,255,255,0.2);
+      color: #e0e1dd; padding: 6px 12px;
+      border-radius: 6px; cursor: pointer; font-size: 12px;
+      font-family: inherit;
+    }
+    .moon-home-btn:hover { background: rgba(255,255,255,0.06); }
+    .moon-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 1fr;
+      grid-template-areas:
+        "activity news"
+        "weather  news";
+      gap: 12px; margin-bottom: 16px;
+    }
+    .moon-widget {
+      background: rgba(13, 27, 42, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 0.5px solid rgba(254, 243, 199, 0.15);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .moon-widget--activity { grid-area: activity; }
+    .moon-widget--weather  { grid-area: weather; }
+    .moon-widget--news     { grid-area: news; }
+    .moon-widget-head {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: #a8b2c1;
+      margin-bottom: 12px;
+    }
+    .moon-stat-line {
+      font-size: 14px; color: #e0e1dd; line-height: 1.7;
+    }
+    .moon-stat-sub {
+      font-size: 12px; color: #a8b2c1; margin-top: 6px;
+    }
+    .moon-temp {
+      font-size: 28px; font-weight: 500; color: #ffffff;
+      line-height: 1.2; margin-bottom: 4px;
+    }
+    .moon-news-item {
+      display: block; padding: 10px 0;
+      font-size: 13px; color: #e0e1dd;
+      text-decoration: none;
+      border-bottom: 0.5px solid rgba(255,255,255,0.06);
+    }
+    .moon-news-item:last-child { border-bottom: 0; }
+    .moon-news-item:hover      { color: #ffffff; }
+    .moon-briefing {
+      background: rgba(13, 27, 42, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 0.5px solid rgba(254, 243, 199, 0.15);
+      border-radius: 12px; padding: 16px;
+    }
+    .moon-brief-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    .moon-brief-card {
+      background: rgba(254, 243, 199, 0.05);
+      border-radius: 8px; padding: 12px;
+    }
+    .moon-brief-card--dim {
+      background: rgba(254, 243, 199, 0.025);
+      color: #c9d1d9;
+    }
+    .moon-brief-card-title {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 500; color: #e0e1dd;
+      margin-bottom: 8px;
+    }
+    .moon-brief-text {
+      font-size: 13px; line-height: 1.7;
+      white-space: pre-wrap; color: inherit;
+    }
+    .moon-divider {
+      border-top: 0.5px dashed rgba(255,255,255,0.1);
+      margin: 20px 0 12px;
+    }
+    .moon-divider-label {
+      text-align: center; font-size: 11px;
+      color: #6c7681; text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 12px;
+    }
+    .moon-loading {
+      font-size: 13px; color: #a8b2c1; font-style: italic;
+    }
+    .moon-error {
+      font-size: 13px; color: #d97757; font-style: italic;
+    }
+    @media (max-width: 720px) {
+      .moon-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas: "activity" "weather" "news";
+      }
+      .moon-brief-grid { grid-template-columns: 1fr; }
+      .moon-title { font-size: 14px; }
+    }
   </style>
 </head>
 <body>
@@ -1828,10 +1965,223 @@
     }
 
     /* ──────────── Moon Cafe (Q7+Q8) ──────────── */
-    function MoonCafePage({ user }) {
+    const MOON_SVG_PROPS = {
+      width: 14, height: 14, viewBox: '0 0 24 24',
+      fill: 'none', stroke: 'currentColor', strokeWidth: 1.5,
+      strokeLinecap: 'round', strokeLinejoin: 'round',
+    };
+    function MoonIcon(p)     { return <svg {...MOON_SVG_PROPS} {...p}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>; }
+    function CoffeeIcon(p)   { return <svg {...MOON_SVG_PROPS} {...p}><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg>; }
+    function StarIcon(p)     { return <svg {...MOON_SVG_PROPS} {...p}><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z"/></svg>; }
+    function BarChartIcon(p) { return <svg {...MOON_SVG_PROPS} {...p}><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>; }
+    function SunIcon(p)      { return <svg {...MOON_SVG_PROPS} {...p}><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>; }
+    function NewsIcon(p)     { return <svg {...MOON_SVG_PROPS} {...p}><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></svg>; }
+
+    function MoonStars() {
+      const starsRef = useRef(null);
+      if (!starsRef.current) {
+        starsRef.current = Array.from({ length: 18 }, () => ({
+          cx: Math.random() * 100,
+          cy: Math.random() * 100,
+          r: 0.4 + Math.random() * 0.9,
+          duration: 2 + Math.random() * 3,
+          delay: Math.random() * 5,
+        }));
+      }
       return (
-        <div className="empty-state">
-          🌙 문카페 곧 오픈
+        <svg className="moon-stars" preserveAspectRatio="none" viewBox="0 0 100 100">
+          {starsRef.current.map((s, i) => (
+            <circle key={i} cx={s.cx} cy={s.cy} r={s.r} fill="#fef3c7"
+              style={{ animation: `moon-twinkle ${s.duration}s ease-in-out ${s.delay}s infinite` }} />
+          ))}
+        </svg>
+      );
+    }
+
+    function moonTruncate(s, n) {
+      if (!s) return '';
+      return s.length > n ? s.slice(0, n - 1) + '…' : s;
+    }
+
+    function MoonCafePage({ user }) {
+      const [me, setMe] = useState(null);
+      const [weather, setWeather] = useState(null);
+      const [news, setNews] = useState(null);
+      const [briefing, setBriefing] = useState(null);
+      const [light, setLight] = useState({ loading: true, error: null });
+      const [briefingLoading, setBriefingLoading] = useState(true);
+      const [briefingError, setBriefingError] = useState(false);
+
+      useEffect(() => {
+        let alive = true;
+        setLight({ loading: true, error: null });
+        setBriefingLoading(true);
+        setBriefingError(false);
+
+        // 가벼운 3개 (DB+외부 API) 병렬
+        Promise.all([
+          api('/api/moon?view=me', { auth: true }),
+          api('/api/moon?view=weather'),
+          api('/api/moon?view=news'),
+        ]).then(([rMe, rW, rN]) => {
+          if (!alive) return;
+          if (rMe.ok) setMe(rMe.data && rMe.data.data || null);
+          setWeather(rW.data && rW.data.data || null);
+          setNews(rN.data && rN.data.data || null);
+          setLight({ loading: false, error: null });
+        }).catch((e) => {
+          if (!alive) return;
+          console.error('[moon-cafe] light fetch:', e);
+          setLight({ loading: false, error: '데이터를 불러오지 못했어요' });
+        });
+
+        // 무거운 브리핑 별도 (10초+ 가능)
+        api('/api/moon?view=briefing', { auth: true }).then((rB) => {
+          if (!alive) return;
+          if (rB.ok && rB.data && rB.data.data) setBriefing(rB.data.data);
+          else setBriefingError(true);
+          setBriefingLoading(false);
+        }).catch((e) => {
+          if (!alive) return;
+          console.error('[moon-cafe] briefing fetch:', e);
+          setBriefingError(true);
+          setBriefingLoading(false);
+        });
+
+        return () => { alive = false; };
+      }, [user && user.id]);
+
+      return (
+        <div className="moon-page">
+          <MoonStars />
+          <div className="moon-content">
+
+            {/* 헤더 */}
+            <div className="moon-header">
+              <div className="moon-title">
+                <MoonIcon width="16" height="16" /> 문카페
+              </div>
+              <div className="moon-user">
+                <span>🦉 {user && user.display_name}</span>
+                <button className="moon-home-btn" onClick={() => navigate('#/')}>홈으로</button>
+              </div>
+            </div>
+
+            {/* 위젯 그리드 */}
+            <div className="moon-grid">
+
+              {/* 활동 요약 */}
+              <div className="moon-widget moon-widget--activity">
+                <div className="moon-widget-head">
+                  <BarChartIcon /> 활동 요약
+                </div>
+                {light.loading ? (
+                  <div className="moon-loading">불러오는 중…</div>
+                ) : me ? (
+                  <div className="moon-stat-line">
+                    글 {me.community.posts_total}건 · 댓글 {me.community.comments_total}건<br/>
+                    주문 {me.shop.orders_total}건 · 누적 {(me.shop.total_spent || 0).toLocaleString('ko-KR')}원
+                    <div className="moon-stat-sub">
+                      가입 {me.user.days_since_join}일차 · 받은 반응 {me.community.reactions_received}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="moon-error">정보를 불러오지 못했어요</div>
+                )}
+              </div>
+
+              {/* 날씨 */}
+              <div className="moon-widget moon-widget--weather">
+                <div className="moon-widget-head">
+                  <SunIcon /> {weather ? weather.location : '서울 종로구'}
+                </div>
+                {light.loading ? (
+                  <div className="moon-loading">불러오는 중…</div>
+                ) : weather ? (
+                  <div>
+                    <div className="moon-temp">{weather.current.temperature}°</div>
+                    <div className="moon-stat-line">
+                      {weather.current.weather_label} · 습도 {weather.current.humidity}%
+                    </div>
+                    <div className="moon-stat-sub">
+                      오늘 {weather.today.temp_max}° / {weather.today.temp_min}° · 강수 {weather.today.precipitation_sum}mm
+                    </div>
+                  </div>
+                ) : (
+                  <div className="moon-error">정보를 불러오지 못했어요</div>
+                )}
+              </div>
+
+              {/* 뉴스 */}
+              <div className="moon-widget moon-widget--news">
+                <div className="moon-widget-head">
+                  <NewsIcon /> 오늘 뉴스
+                </div>
+                {light.loading ? (
+                  <div className="moon-loading">불러오는 중…</div>
+                ) : news && news.items && news.items.length ? (
+                  news.items.map((it, i) => (
+                    <a key={i} className="moon-news-item"
+                       href={it.link} target="_blank" rel="noopener noreferrer"
+                       title={it.title}>
+                      {moonTruncate(it.title, 38)}
+                    </a>
+                  ))
+                ) : (
+                  <div className="moon-error">정보를 불러오지 못했어요</div>
+                )}
+              </div>
+            </div>
+
+            {/* AI 브리핑 — Before/After */}
+            <div className="moon-briefing">
+              <div className="moon-widget-head">
+                <MoonIcon /> 오늘의 브리핑
+              </div>
+
+              {briefingLoading ? (
+                <div className="moon-loading">🌙 카페지기와 달지기가 오늘을 살피고 있어요... (4~10초)</div>
+              ) : briefing ? (
+                <>
+                  <div className="moon-brief-grid">
+                    <div className="moon-brief-card">
+                      <div className="moon-brief-card-title">
+                        <CoffeeIcon /> 카페지기
+                      </div>
+                      <div className="moon-brief-text">{briefing.with_context.cafe_keeper}</div>
+                    </div>
+                    <div className="moon-brief-card">
+                      <div className="moon-brief-card-title">
+                        <StarIcon /> 달지기
+                      </div>
+                      <div className="moon-brief-text">{briefing.with_context.moon_keeper}</div>
+                    </div>
+                  </div>
+
+                  <div className="moon-divider"/>
+                  <div className="moon-divider-label">— 비교: 컨텍스트 없이 일반 답변 —</div>
+
+                  <div className="moon-brief-grid">
+                    <div className="moon-brief-card moon-brief-card--dim">
+                      <div className="moon-brief-card-title">
+                        <CoffeeIcon /> 카페지기 (일반)
+                      </div>
+                      <div className="moon-brief-text">{briefing.without_context.cafe_keeper}</div>
+                    </div>
+                    <div className="moon-brief-card moon-brief-card--dim">
+                      <div className="moon-brief-card-title">
+                        <StarIcon /> 달지기 (일반)
+                      </div>
+                      <div className="moon-brief-text">{briefing.without_context.moon_keeper}</div>
+                    </div>
+                  </div>
+                </>
+              ) : briefingError ? (
+                <div className="moon-error">브리핑을 불러오지 못했어요</div>
+              ) : null}
+            </div>
+
+          </div>
         </div>
       );
     }
