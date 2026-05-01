@@ -751,6 +751,7 @@
       if (ms) return { name: 'shop-product', id: parseInt(ms[1]) };
       const mo = path.match(/^\/shop\/order\/(\d+)$/);
       if (mo) return { name: 'shop-order', id: parseInt(mo[1]) };
+      if (path === '/me')                   return { name: 'moon-cafe' };
       return { name: 'unknown', path };
     }
     function navigate(hash) { location.hash = hash; }
@@ -1041,6 +1042,7 @@
                     </button>
                     {open && (
                       <div className="dropdown">
+                        <button onClick={() => { setOpen(false); navigate('#/me'); }}>🌙 문카페</button>
                         <button onClick={() => { setOpen(false); navigate('#/shop/orders'); }}>📦 주문 내역</button>
                         <button onClick={() => { setOpen(false); onLogout(); }}>로그아웃</button>
                       </div>
@@ -1825,6 +1827,15 @@
       );
     }
 
+    /* ──────────── Moon Cafe (Q7+Q8) ──────────── */
+    function MoonCafePage({ user }) {
+      return (
+        <div className="empty-state">
+          🌙 문카페 곧 오픈
+        </div>
+      );
+    }
+
     /* ──────────── App ──────────── */
     function App() {
       const [user, setUser] = useState(null);
@@ -1970,6 +1981,15 @@
           content = null;
         } else {
           content = <ShopOrder id={route.id} showToast={showToast} />;
+        }
+      } else if (route.name === 'moon-cafe') {
+        if (!user) {
+          if (!pendingNavRef.current) pendingNavRef.current = '#/me';
+          if (modal !== 'login') setModal('login');
+          setTimeout(() => navigate('#/'), 0);
+          content = null;
+        } else {
+          content = <MoonCafePage user={user} />;
         }
       } else {
         content = <div className="empty-state">페이지를 찾을 수 없어요</div>;
